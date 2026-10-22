@@ -41,3 +41,8 @@
 - 脚本出厂把 `COMMUNITY_URL` 填成线上地址，并且只把「网友推荐」交给本服务（脚本 `core/constants.ts` 的 `COMMUNITY_CHANNELS = ["user"]`）；
   作者精选仍然读原作者 GitLab 上的列表，所以后台的作者精选频道目前用不上
 - 脚本侧的改动记在[脚本文档末尾的更新记录](https://github.com/ios151/Scripting/blob/main/docs/JavBus.md#更新记录)里
+
+### 仓库公开、MIT 许可（同日，未升版本号）
+
+- 仓库从私库改成公开（https://github.com/ios151/javbus-community）；公开前扫过工作区和提交历史，没有密钥、账号信息和本机路径；README / CHANGELOG 里指向本机目录的链接改成了公开文档
+- 许可证：先考虑过 GPL-3.0（和 Scripting 仓库一致），后来定为 MIT——服务端希望别人可以随便拿去改、拿去部署，不要求改动开源；新增 `LICENSE`，`package.json` 写上 `license`

@@ -381,5 +381,5 @@ scripts/                 ensure-assets.mjs（测试前保证 admin/dist 存在�
 
 ## 许可
 
-**暂时没有选许可证**，目录里没有 `LICENSE` 文件：代码公开可读，但按默认规则保留所有权利，想复用或二次发布请先联系作者（Telegram @ios151，https://t.me/ios151）。
-（常见选择：MIT 最宽松；AGPL-3.0 要求别人把改过的服务端也开源。）
+**[MIT](LICENSE)**：随便用、随便改、随便二次发布（包括闭源和商用），只要求保留版权声明和许可文本，不提供任何担保。
+和 [ios151/Scripting](https://github.com/ios151/Scripting)（GPL-3.0）不是同一个协议：那边是客户端脚本，这边是服务端，各自独立。
