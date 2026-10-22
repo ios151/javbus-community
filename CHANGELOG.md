@@ -40,4 +40,4 @@
 
 - 脚本出厂把 `COMMUNITY_URL` 填成线上地址，并且只把「网友推荐」交给本服务（脚本 `core/constants.ts` 的 `COMMUNITY_CHANNELS = ["user"]`）；
   作者精选仍然读原作者 GitLab 上的列表，所以后台的作者精选频道目前用不上
-- 脚本侧的改动记在[脚本的更新记录](../scripting/scripts/JavBus/CHANGELOG.md)里
+- 脚本侧的改动记在[脚本文档末尾的更新记录](https://github.com/ios151/Scripting/blob/main/docs/JavBus.md#更新记录)里

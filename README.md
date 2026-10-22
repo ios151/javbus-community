@@ -1,6 +1,6 @@
 # javbus-community
 
-[JavBus（Scripting 脚本）](../scripting/scripts/JavBus/README.md)的**社区推荐服务**：一个 Cloudflare Worker + D1 数据库，自带管理后台，
+[JavBus（Scripting 脚本）](https://github.com/ios151/Scripting/blob/main/docs/JavBus.md)的**社区推荐服务**：一个 Cloudflare Worker + D1 数据库，自带管理后台，
 让一群人一起维护「作者精选」和「网友推荐」两份推荐列表。Hono 框架，免费版就能跑。
 
 > **状态**：代码和测试都写完了（320 个后端测试 + 173 个后台页面的测试，全部本地通过；后台页面在浏览器里逐页走过；脚本侧对着本地 Worker 跑过端到端；还经过一轮独立的代码审查，发现的问题都修了）。
@@ -121,7 +121,7 @@ npm run test:admin     # 后台页面里纯逻辑的测试
 「作者推荐」也仍然走原作者的上传服务。所以后台里的「作者精选」频道目前用不上，不导入也没关系；以后想搬过来，先导入作者精选，再把 `"author"` 加进 `COMMUNITY_CHANNELS` 发版。
 
 维护者想在脚本里撤销别人提交的网友推荐：后台「我的账号 → App 口令」生成一个（`jca_` 开头），脚本里弹出输入框时填它。作者精选不归这个服务管的时候，脚本里的「作者推荐」用不上这个口令。
-脚本侧的行为（设备号、自助撤销、举报、返回码）见 [脚本 README 的「社区推荐服务」](../scripting/scripts/JavBus/README.md)。
+脚本侧的行为（设备号、自助撤销、举报、返回码）见 [脚本文档的「社区推荐服务」](https://github.com/ios151/Scripting/blob/main/docs/JavBus.md#社区推荐服务)。
 
 ### 用 GitHub Actions 自动部署（可选）
 
@@ -381,5 +381,5 @@ scripts/                 ensure-assets.mjs（测试前保证 admin/dist 存在�
 
 ## 许可
 
-**还没有选许可证**，目录里没有 `LICENSE` 文件——默认就是「保留所有权利」。要公开发布请项目所有者先决定（常见选择：MIT 最宽松；
-AGPL-3.0 要求别人把改过的服务端也开源）。
+**暂时没有选许可证**，目录里没有 `LICENSE` 文件：代码公开可读，但按默认规则保留所有权利，想复用或二次发布请先联系作者（Telegram @ios151，https://t.me/ios151）。
+（常见选择：MIT 最宽松；AGPL-3.0 要求别人把改过的服务端也开源。）
