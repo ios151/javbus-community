@@ -45,6 +45,7 @@
 ### 仓库公开、MIT 许可（同日，未升版本号）
 
 - 仓库从私库改成公开（https://github.com/ios151/javbus-community）；公开前扫过工作区和提交历史，没有密钥、账号信息和本机路径；README / CHANGELOG 里指向本机目录的链接改成了公开文档
+- README 加了「截图」一节（概览、条目管理、自动检查，图在 `docs/screenshots/`，封面都是糊的）
 - 许可证：先考虑过 GPL-3.0（和 Scripting 仓库一致），后来定为 MIT——服务端希望别人可以随便拿去改、拿去部署，不要求改动开源；新增 `LICENSE`，`package.json` 写上 `license`
 - 修复：GitHub Actions 的 CI 在 `npm ci` 这一步就失败（前三次推送都是）。原因：`vitest` 依赖的 `@vitest/mocker` 把 `msw` 声明成可选对等依赖（`^2.4.9`），而我们用的是 `msw@3`；
   本机的 npm 11 对这种不满足的可选对等依赖视而不见，CI 里的 npm 10.9.9 却会去装一份 `msw@2.15.0`，锁文件里没有，就报「Missing: msw@2.15.0 from lock file」。
