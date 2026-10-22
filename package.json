@@ -35,6 +35,9 @@
     "vitest": "^4.1.12",
     "wrangler": "^4.151.3"
   },
+  "overrides": {
+    "msw": "$msw"
+  },
   "engines": {
     "node": ">=22.12.0"
   }
