@@ -1,0 +1,40 @@
+{
+  "name": "javbus-community",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "JavBus（Scripting 脚本）的社区推荐服务：Hono + D1 + Cron，带管理后台，大家一起维护",
+  "scripts": {
+    "dev": "wrangler dev",
+    "dev:admin": "vite --config admin/vite.config.ts",
+    "build:admin": "vite build --config admin/vite.config.ts",
+    "build": "npm run build:admin",
+    "types": "wrangler types",
+    "typecheck": "npm run types && tsc --noEmit && tsc --noEmit -p admin/tsconfig.json",
+    "pretest": "node scripts/ensure-assets.mjs",
+    "test": "npm run types && vitest run",
+    "test:watch": "vitest",
+    "test:admin": "vitest run --config admin/vitest.config.ts",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:migrate": "wrangler d1 migrations apply DB --remote",
+    "deploy": "npm run build:admin && wrangler deploy && npm run db:migrate"
+  },
+  "dependencies": {
+    "hono": "^4.13.13"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "^1.4.6",
+    "@msw/cloudflare": "^0.2.0",
+    "@preact/preset-vite": "^2.10.6",
+    "msw": "^3.0.3",
+    "preact": "^10.29.8",
+    "qrcode-generator": "^2.0.4",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.7",
+    "vitest": "^4.1.12",
+    "wrangler": "^4.151.3"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

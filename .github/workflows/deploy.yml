@@ -1,0 +1,51 @@
+# 部署到 Cloudflare：在 Actions 页面手动运行；仓库变量 DEPLOY_TO_CLOUDFLARE 设成 true 以后，推送到 main 也会自动部署。
+#
+# 用之前要做四件事（详见 README「用 GitHub Actions 自动部署」）：
+#   1. 先在自己电脑上手动 `npm run deploy` 一次：第一次部署时 Wrangler 会按 database_name 自动建 D1 数据库（CI 里不会写回 database_id，也不需要：
+#      之后的部署会沿用 Worker 上已经绑定的同名库，本机第二次部署实测是这样，真实 CI 里没跑过）；
+#   2. 在仓库的 Settings → Secrets and variables → Actions 里加两个机密：CLOUDFLARE_API_TOKEN、CLOUDFLARE_ACCOUNT_ID；
+#   3. 机密 SETUP_TOKEN 不在这里：它是 Worker 自己的机密，用 `npx wrangler secret put SETUP_TOKEN` 设一次就行，部署不会清掉它；
+#   4. 想推送到 main 就自动部署：在同一页的 Variables 里加 DEPLOY_TO_CLOUDFLARE = true。没加时推送触发的部署任务显示「跳过」，
+#      免得机密还没配好时每次推送都报错；手动运行不看这个开关。
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+# 同一时间只部署一次；后来的排队，不要把正在进行的打断（迁移做到一半被取消会很麻烦）
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # 手动运行一律执行；推送触发的要等仓库变量 DEPLOY_TO_CLOUDFLARE 设成 true（机密配好了）才执行，否则显示「跳过」
+    if: github.event_name == 'workflow_dispatch' || vars.DEPLOY_TO_CLOUDFLARE == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build:admin
+
+      # 先迁移再部署：迁移都是只增不改的，旧代码在新表结构上照样能跑，反过来新代码在旧表结构上会出错
+      - name: 应用数据库迁移
+        run: npx wrangler d1 migrations apply DB --remote
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: 部署 Worker 和后台页面
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy

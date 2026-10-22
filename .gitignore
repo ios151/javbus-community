@@ -1,0 +1,9 @@
+node_modules/
+.wrangler/
+.dev.vars
+admin/dist/
+worker-configuration.d.ts
+*.log
+.DS_Store
+# 从原作者 GitLab 下载下来、用来手动导入的列表：是数据不是源码，需要时重新下载
+original-lists/

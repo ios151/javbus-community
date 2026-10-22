@@ -1,0 +1,46 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "javbus-community",
+  "main": "src/index.ts",
+  // 运行时语义快照：新建 Worker 用建项目当天的日期，之后隔一阵看一眼兼容性变更再升。
+  "compatibility_date": "2026-10-22",
+
+  // 管理后台是 admin/ 下用 Vite 构建出来的静态页面（npm run build:admin → admin/dist），
+  // 和 API 同一个 Worker 一起部署：一条命令、一个域名、没有跨域。
+  // Cloudflare 现在推荐新项目用「Workers 静态资源」代替 Pages；前端产物只是普通静态文件，真要用 Pages 也能直接丢上去（见 README）。
+  "assets": {
+    "directory": "./admin/dist",
+    "binding": "ASSETS",
+    // 深链接（/admin/queue 这类）刷新时回 index.html，由前端路由接手
+    "not_found_handling": "single-page-application",
+    // /api/* 一律先进 Worker，不去静态资源里找
+    "run_worker_first": ["/api/*"]
+  },
+
+  // 数据库。不写 database_id：第一次 wrangler deploy 时 Wrangler 会按 database_name 自动建库（交互式终端里还会把 id 写回这里，CI 等非交互环境不写），
+  // 之后每次部署沿用 Worker 上已经绑定的同名库，不写 id 也行。也可以先 `wrangler d1 create javbus-community` 再把 id 填进来。迁移文件在 migrations/。
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "javbus-community",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  // 定时任务（UTC）。免费版每个账号只能有 5 个 cron，这里只用 2 个：
+  // - 每 30 分钟：自动检查一批条目（失效的封面 / 链接）
+  // - 每天 04:17：清理过期数据、重建公开快照
+  "triggers": {
+    "crons": ["*/30 * * * *", "17 4 * * *"]
+  },
+
+  // 站点名称、各种开关都在后台「设置」里改（存在 D1），这里不放 vars；唯一需要的机密是 SETUP_TOKEN（wrangler secret put）。
+
+  // 日志：只留我们自己打的几行 JSON（定时任务跑了什么、没处理的错误），出了问题在 Cloudflare 后台能直接翻。
+  // 平台自带的「调用日志」（每个请求一条，带请求 / 响应的元数据）关掉了：App 每次启动读列表就是 2 个请求，会很快用完免费版每天 20 万条的日志额度，
+  // 而且我们特意只存设备号 / IP 的哈希，不该让平台日志把它们再记一遍。要排查具体请求时可以临时改成 true（或删掉这一项）。
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1, "invocation_logs": false }
+  }
+}

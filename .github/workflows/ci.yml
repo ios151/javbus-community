@@ -1,0 +1,23 @@
+# 每次推送 / 提 PR 都跑一遍：类型检查、全部测试、构建后台页面。
+# 不需要任何机密：测试跑在本地模拟的 Workers 运行时里（@cloudflare/vitest-plugin），外连全部用 msw 模拟。
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run test:admin
+      - run: npm run build:admin

@@ -1,0 +1,12 @@
+# Workers 静态资源的响应头（Cloudflare 的 _headers 语法）。
+# CSP 说明：脚本只允许同源文件（构建产物里没有内联脚本）；样式允许内联（少量 style 属性）；
+# 封面图来自各个站点，所以 img-src 放开 https / http；接口只连同源。
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: https: http:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'
+
+# 构建产物的文件名带内容哈希，可以放心长期缓存
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

@@ -1,0 +1,26 @@
+{
+  // 管理后台前端的类型检查配置（根目录 `npm run typecheck` 会跑 `tsc --noEmit -p admin/tsconfig.json`）。
+  // 和后端的 tsconfig 分开：这边是浏览器环境（DOM + Preact JSX），那边是 workerd。
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "types": ["vite/client"]
+  },
+  "include": ["src", "test", "../shared"]
+}
